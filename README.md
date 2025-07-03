@@ -20,11 +20,18 @@ Retrieve datasets from the following sources:
 - The genome-wide prediction of small peptides was performed using a six-frame translation approach implemented in EMBOSS (http://emboss.open-bio.org) and ORFIPY (https://github.com/urmi-21/orfipy), generating all possible protein-coding sequences extending from termination codons. Filtering criteria were applied to retain sequences ranging from 5 to 75 amino acids in length.
 - To predict small peptides from genomic data, run the following command:
 
+```bash
+orfipy name_genome.fasta --min 15 --max 1000000 --chunk-size 100 --start ATG,TTG,CTG,GTG --outdir orfipy --bed12 name_genome.bed  --pep name_genome_peptide.fa --procs 30
 ```
-nextflow run 01.genome_de_novo/all_orf.nf -with-trace -resume --queueq xhhctdnormal --genome_dddir ../../genome/ -qs 30
+```bash
+python ../HerbalPDB-main/01.genome_de_novo/bin/PepFilter.py -i name_genome_peptide.fa  -o  name_genome_orfs_resulrs_peptide.fa --start ATG --size 5,75
+
+```
+```bash
+cd-hit -i name_genome_orfs_resulrs_peptide.fa -o name_genome_orfs_resulrs_peptide.rmdup.fa -c 0.5 -n 3 -l 4 -T 8 -M 20000
 ```
 
-- Replace `../../genome/` with the path to the genome files. Results will be outputted to `Result/01.orf/*/*.peptide*.fa`.
+- Replace `name_genome.fa` with the path to the genome files. 
 
 #### Transcriptomic Prediction of Small Peptides
 
